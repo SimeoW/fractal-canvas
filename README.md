@@ -1,2 +1,2 @@
 # Fractal Canvas
- Generate stunning fractals
+ This application is still under development
