@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Fractal Canvas</string>
+    <string name="presets">Presets</string>
+    <string name="equations">Equations</string>
+    <string name="detail">Detail</string>
+    <string name="resolution">Resolution</string>
+    <string name="iterations">Iterations</string>
+    <string name="color">Color</string>
+    <string name="save">Save</string>
+    <string name="export">Export</string>
+</resources>

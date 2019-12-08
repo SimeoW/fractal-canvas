@@ -1,2 +1,2 @@
-# fractal-canvas
- Android application to generate stunning fractals
+# Fractal Canvas
+ Generate stunning fractals
