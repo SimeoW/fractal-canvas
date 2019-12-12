@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.widget.Toast
 
 
 class CustomView @JvmOverloads constructor(
@@ -135,6 +136,8 @@ class CustomView @JvmOverloads constructor(
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             mScaleFactor *= detector.scaleFactor
+
+            //Toast.makeText(this, "Hello", Toast.LENGTH_LONG).show();
             //mScaleFactor = Math.max(0.1.toDouble(), Math.min(mScaleFactor, 1.toDouble()))
             invalidate()
             return true
@@ -162,6 +165,17 @@ class CustomView @JvmOverloads constructor(
                 )
             }
         }
+        paint.color = Color.WHITE
+        canvas.drawLine(
+            (canvas.width / 2).toFloat(), 0f,
+            (canvas.width / 2).toFloat(), canvas.height.toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            0f, canvas.height / 2f,
+            canvas.width.toFloat(), canvas.height / 2f,
+            paint
+        )
     }
 
     private fun print(msg: String) {

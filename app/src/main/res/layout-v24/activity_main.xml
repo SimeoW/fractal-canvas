@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/menuButton"
@@ -246,6 +246,7 @@
         android:id="@+id/changeDataLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:addStatesFromChildren="true"
         android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/menuBar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -257,16 +258,23 @@
             android:layout_height="wrap_content"
             android:text="Button" />
 
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="77dp"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+
         <SeekBar
             android:id="@+id/seekBar"
             style="@android:style/Widget.Material.SeekBar.Discrete"
-            android:layout_width="match_parent"
+            android:layout_width="162dp"
             android:layout_height="match_parent"
             android:progress="50" />
 
         <ImageView
             android:id="@+id/cancelBtn"
-            android:layout_width="40dp"
+            android:layout_width="32dp"
             android:layout_height="match_parent"
             app:srcCompat="@drawable/ic_close" />
 

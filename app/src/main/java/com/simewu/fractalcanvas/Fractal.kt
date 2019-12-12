@@ -23,7 +23,7 @@ class Fractal {
             }
             //z = z.mul(z).add(c)
             //z = z.abs()
-            z = z.mul(z).add(c).sub(z)
+            z = z.mul(z).add(c)
         }
         return iterations
     }
