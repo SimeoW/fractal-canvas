@@ -7,6 +7,21 @@ class Fractal {
     var iterations = 100
     var breakOut = 4
     var equation = "Z^2 + C"
+    var resolution = 20
+    var detail = 1
+
+    fun clone(): Fractal {
+        val clone = Fractal()
+        clone.xoff = xoff
+        clone.yoff = yoff
+        clone.scale = scale
+        clone.iterations = iterations
+        clone.breakOut = breakOut
+        clone.equation = equation
+        clone.resolution = resolution
+        clone.detail = detail
+        return clone
+    }
 
     fun generateLambda(expression: String) {
 
@@ -25,6 +40,6 @@ class Fractal {
             //z = z.abs()
             z = z.mul(z).add(c)
         }
-        return iterations
+        return iterations * detail
     }
 }

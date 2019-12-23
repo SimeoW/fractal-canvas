@@ -17,7 +17,7 @@ class CustomView @JvmOverloads constructor(
     attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private var fractal: Fractal = Fractal()
+    public var fractal: Fractal = Fractal()
 
     private val paint =
         Paint().apply {
@@ -25,23 +25,24 @@ class CustomView @JvmOverloads constructor(
             color = Color.RED
         }
 
-    private var xoff_ = 1.toDouble()
-    private var yoff_ = 1.toDouble()
-    private var _xoff = 1.toDouble()
-    private var _yoff = 1.toDouble()
-    private var __xoff = 1.toDouble()
-    private var __yoff = 1.toDouble()
+    private var xoff_ = 1.0
+    private var yoff_ = 1.0
+    private var _xoff = 1.0
+    private var _yoff = 1.0
+    private var __xoff = 1.0
+    private var __yoff = 1.0
 
     private val INVALID_POINTER_ID = -1
-    private var mPosX: Double = 0.toDouble()
-    private var mPosY: Double = 0.toDouble()
-    private var mLastTouchX: Double = 0.toDouble()
-    private var mLastTouchY: Double = 0.toDouble()
-    private var mLastGestureX: Double = 0.toDouble()
-    private var mLastGestureY: Double = 0.toDouble()
+    private var mPosX: Double = 0.0
+    private var mPosY: Double = 0.0
+    private var mLastTouchX: Double = 0.0
+    private var mLastTouchY: Double = 0.0
+    private var mLastGestureX: Double = 0.0
+    private var mLastGestureY: Double = 0.0
     private var mActivePointerId = INVALID_POINTER_ID
     private var mScaleDetector = ScaleGestureDetector(getContext(), ScaleListener())
     private var mScaleFactor = 1.toDouble()
+    private var mTouchChanged = false
 
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
@@ -58,6 +59,7 @@ class CustomView @JvmOverloads constructor(
                     mLastTouchX = x.toDouble()
                     mLastTouchY = y.toDouble()
                     mActivePointerId = ev.getPointerId(0)
+                    mTouchChanged = true
                 }
             }
             MotionEvent.ACTION_POINTER_1_DOWN -> {
@@ -66,6 +68,7 @@ class CustomView @JvmOverloads constructor(
                     val gy = mScaleDetector.focusY
                     mLastGestureX = gx.toDouble()
                     mLastGestureY = gy.toDouble()
+                    mTouchChanged = true
                 }
             }
             MotionEvent.ACTION_MOVE -> {
@@ -92,12 +95,15 @@ class CustomView @JvmOverloads constructor(
                     mLastGestureX = gx.toDouble()
                     mLastGestureY = gy.toDouble()
                 }
+                mTouchChanged = true
             }
             MotionEvent.ACTION_UP -> {
                 mActivePointerId = INVALID_POINTER_ID
+                mTouchChanged = false
             }
             MotionEvent.ACTION_CANCEL -> {
                 mActivePointerId = INVALID_POINTER_ID
+                mTouchChanged = false
             }
             MotionEvent.ACTION_POINTER_UP -> {
                 val pointerIndex =
@@ -115,6 +121,7 @@ class CustomView @JvmOverloads constructor(
                     mLastTouchX = ev.getX(tempPointerIndex).toDouble()
                     mLastTouchY = ev.getY(tempPointerIndex).toDouble()
                 }
+                mTouchChanged = false
             }
         }
         __xoff = _xoff
@@ -123,9 +130,6 @@ class CustomView @JvmOverloads constructor(
         _yoff = mLastGestureY - mPosY
         xoff_ += (_xoff - __xoff) / fractal.scale
         yoff_ += (_yoff - __yoff) / fractal.scale
-        //fractal.xoff = (fractal.xoff * 1 + xoff_) / 2
-        //fractal.yoff = (fractal.yoff * 1 + yoff_) / 2
-        //fractal.scale = (fractal.scale * 3 + mScaleFactor) / 4
         fractal.xoff = xoff_
         fractal.yoff = yoff_
         fractal.scale = mScaleFactor
@@ -147,35 +151,40 @@ class CustomView @JvmOverloads constructor(
     // Called when the view should render its content.
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        render(canvas, 20)
+        render(canvas)
     }
 
-    fun render(canvas: Canvas, resolution: Int) {
+    fun render(canvas: Canvas) {
         var _x : Double
         var _y : Double
         var maxWH = Math.max(canvas.width, canvas.height)
-        for (y in 0 until canvas.height step resolution) {
-            for (x in 0 until canvas.width step resolution) {
+        for (y in 0 until canvas.height step fractal.resolution) {
+            for (x in 0 until canvas.width step fractal.resolution) {
                 _x = ((x - canvas.width / 2) / fractal.scale  + fractal.xoff) / maxWH * 8
                 _y = ((y - canvas.height / 2) / fractal.scale + fractal.yoff) / maxWH * 8
                 paint.color = getColor(_x, _y)
+
                 canvas.drawRect(
                     x.toFloat(), y.toFloat(),
-                    (x + resolution).toFloat(), (y + resolution).toFloat(), paint
+                    (x + fractal.resolution).toFloat(), (y + fractal.resolution).toFloat(), paint
                 )
             }
         }
-        paint.color = Color.WHITE
-        canvas.drawLine(
-            (canvas.width / 2).toFloat(), 0f,
-            (canvas.width / 2).toFloat(), canvas.height.toFloat(),
-            paint
-        )
-        canvas.drawLine(
-            0f, canvas.height / 2f,
-            canvas.width.toFloat(), canvas.height / 2f,
-            paint
-        )
+
+        if(mTouchChanged) {
+            // Cross-hair drawing
+            paint.color = Color.argb(128, 128, 128, 128)
+            canvas.drawLine(
+                (canvas.width / 2).toFloat(), 0f,
+                (canvas.width / 2).toFloat(), canvas.height.toFloat(),
+                paint
+            )
+            canvas.drawLine(
+                0f, canvas.height / 2f,
+                canvas.width.toFloat(), canvas.height / 2f,
+                paint
+            )
+        }
     }
 
     private fun print(msg: String) {
